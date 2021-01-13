@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorting viewer</title>
+
+    <style>
+
+        html, body {
+            z-index: 1;
+            box-sizing: border-box;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #F6F6F6;
+        }
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            background-color: black;
+        }
+
+        #controls{
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="controls">
+        <button id="shuffle">Shuffle</button>
+        <button id="sort">Sort</button>
+        <button id="log">Log</button>
+    </div>
+    <script type="module" src="js/index.js"></script>
+</body>
+</html>
