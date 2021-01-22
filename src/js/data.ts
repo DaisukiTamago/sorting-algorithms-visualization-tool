@@ -1,54 +1,59 @@
-import {canvas, canvasElement} from './domHandler.js'
-import {paintBar} from './draw.js'
+import { canvas, canvasElement } from './domHandler.js'
 
-const listLength = 5
-const originalList = new Array(listLength)
+const listSize = 2000
+const listElementHeight = canvasElement.height / listSize
+const listElementWidth = canvasElement.width / listSize
+const delay = (ms:number) => new Promise(res => setTimeout(res, ms))
+const originalList = new Array(listSize)
+
+const proxyHandler: ProxyHandler<object> = {}
+let list = (new Proxy(originalList, proxyHandler) as number[])
+
 let changeQueue: Change[] = []
-const listElementWidth = canvasElement.width / listLength
-const listElementHeight = canvasElement.height / listLength
-const proxyHandler: ProxyHandler<object> = {
-    get: function (target, prop, receiver) {
-        if(!isNaN(parseInt(prop as string))){
-            observeArrayChanges({type: "get", elementIndex: prop as number}, changeQueue)
-        }
-        
-        return target[prop]
-    },
-    
-    set: function (target, prop, value, receiver) {
-        observeArrayChanges({type: "set", elementIndex: prop as number}, changeQueue)
-        target[prop] = value
-        return true
-    }
-}
-let list = (new Proxy(originalList, proxyHandler) as any[])
 
-function observeArrayChanges(change: Change, changes: Change[]){
-    changes.push(change)
+function clearChangesQueue() {
+    changeQueue = []
 }
 
-function createBarData(value, index):Bar{
+function createBarData(value: number, index: number): Bar {
     return {
         value,
         x: index * listElementWidth,
-        y: canvasElement.height - (value * listElementHeight),
+        y: canvasElement.height - listElementHeight * value,
         width: listElementWidth,
         height: (value * listElementHeight),
         color: "#FFF"
     }
 }
 
-function fillList(values: number[]) {
-    values.map( (value, index) => list[index] = createBarData(value, index) )
-}
+async function executeChangesQueue(callback: Function) {
 
-for(let i = 0, orderedValues = []; i < listLength; i++){
-    orderedValues.push(i + 1)
+    let interval = 0
+    let a = []
+    for (let i = 0; i < changeQueue.length; i++) {
 
-    if(i == listLength - 1){
-        fillList(orderedValues)
-        
+        a[i] = new Promise<void>(async (resolve, reject) => {
+            //await delay(interval)
+            setTimeout(() => {
+                if (changeQueue[i].type === "get") {
+                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#F00' })
+                    setTimeout(() => {
+                        callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
+                        resolve()
+                    }, interval)
+                } else {
+                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
+                    resolve()
+                }
+            }, 0)
+        })
+
+        await a[i]
     }
 }
 
-export {list, fillList, changeQueue}
+function addChangeToQueue(change: Change) {
+    changeQueue.push(change)
+}
+
+export { list, proxyHandler, listSize, changeQueue, clearChangesQueue, executeChangesQueue, addChangeToQueue }

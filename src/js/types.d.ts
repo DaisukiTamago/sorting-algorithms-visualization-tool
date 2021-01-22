@@ -13,8 +13,8 @@ interface Bar extends ListElement, CanvasElement{
     height: number,
 }
 
-
 interface Change {
     type: "set" | "get",
-    elementIndex: number
+    index: number,
+    value: number
 }

@@ -1,7 +1,7 @@
 function insertionSort(array: any[]) {
-    //let array = arr
+    
+  const length = array.length
 
-    const length = array.length
     for(let marker = 1; marker < length; marker++){
 
         let comparisonIndex = marker - 1
@@ -30,6 +30,25 @@ function shuffle(array: any[]) {
     }
   
     return array
+}
+
+function quicksort(array: number[]) {
+  if (array.length <= 1) {
+    return array;
   }
 
-export {insertionSort, shuffle}
+  var pivot = array[0];
+  
+  var left = []; 
+  var right = [];
+
+  for (var i = 1; i < array.length; i++) {
+    array[i] < pivot ? left.push(array[i]) : right.push(array[i]);
+  }
+
+  return quicksort(left).concat(pivot, quicksort(right));
+};
+
+
+  
+export {insertionSort, shuffle, quicksort}
