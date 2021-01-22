@@ -7,11 +7,12 @@ function clear(){
 function drawBar(bar:Bar){   
     
     //flush the portion of the canvas correlated to that bar 
-    canvas.clearRect(bar.x, bar.y, bar.width, -canvasElement.height)
+    canvas.clearRect(bar.x, bar.y, bar.width+1, -canvasElement.height)
 
+    canvas.strokeStyle = "#000"
+    canvas.strokeRect(bar.x, bar.y, bar.width, bar.height)
     canvas.fillStyle = bar.color
     canvas.fillRect(bar.x, bar.y, bar.width, bar.height)
-    
 }
 
 function render( list: number[]){

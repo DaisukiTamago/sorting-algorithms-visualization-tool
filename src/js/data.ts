@@ -1,10 +1,12 @@
 import { canvas, canvasElement } from './domHandler.js'
 
-const listSize = 2000
+const listSize = 100
+const originalList = new Array(listSize)
+
 const listElementHeight = canvasElement.height / listSize
 const listElementWidth = canvasElement.width / listSize
-const delay = (ms:number) => new Promise(res => setTimeout(res, ms))
-const originalList = new Array(listSize)
+
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
 
 const proxyHandler: ProxyHandler<object> = {}
 let list = (new Proxy(originalList, proxyHandler) as number[])
@@ -29,26 +31,24 @@ function createBarData(value: number, index: number): Bar {
 async function executeChangesQueue(callback: Function) {
 
     let interval = 0
-    let a = []
-    for (let i = 0; i < changeQueue.length; i++) {
+    let promisesQueue = []
+    let i = 0
+    for (; i < changeQueue.length; i++) {
 
-        a[i] = new Promise<void>(async (resolve, reject) => {
-            //await delay(interval)
-            setTimeout(() => {
-                if (changeQueue[i].type === "get") {
-                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#F00' })
-                    setTimeout(() => {
-                        callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
-                        resolve()
-                    }, interval)
-                } else {
-                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
-                    resolve()
-                }
-            }, 0)
+        promisesQueue[i] = new Promise<void>(async (resolve) => {
+            if (changeQueue[i].type === "get") {
+                callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#F00' })
+                await delay(interval)
+                callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
+                resolve()
+            } else {
+                callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
+                await delay(interval)
+                resolve()
+            }
         })
 
-        await a[i]
+        await promisesQueue[i]
     }
 }
 
