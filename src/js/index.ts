@@ -76,19 +76,6 @@ shuffleButton.onclick = async () => {
     enableControls()
 }
 
-
-window.onkeydown = (key: KeyboardEvent) => {
-    if(key.key == " "){
-        controlsContainer.style.visibility = controlsContainer.style.visibility == "hidden" ? "visible" : "hidden"
-    }
-    if(key.key == "c"){
-        console.log(changeQueue)
-    }
-    if(key.key == "l"){
-        console.log(list)
-    }
-}
-
 (async () => {
     await initialize()
 })()
