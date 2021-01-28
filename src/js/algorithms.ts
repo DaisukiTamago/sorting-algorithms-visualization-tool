@@ -32,23 +32,57 @@ function shuffle(array: any[]) {
     return array
 }
 
-function quicksort(array: number[]) {
-  if (array.length <= 1) {
-    return array;
+
+function browserDefaultSort(array: number[]){
+  array.sort( (a ,b) => a-b)
+}
+
+// create max heap
+function maxHeap(input, i) {
+  const left = 2 * i + 1
+  const right = 2 * i + 2
+  let max = i
+
+  if (left < arrLength && input[left] > input[max]) {
+      max = left
   }
 
-  var pivot = array[0];
-  
-  var left = []; 
-  var right = [];
-
-  for (var i = 1; i < array.length; i++) {
-    array[i] < pivot ? left.push(array[i]) : right.push(array[i]);
+  if (right < arrLength && input[right] > input[max])     {
+      max = right
   }
 
-  return quicksort(left).concat(pivot, quicksort(right));
-};
+  if (max != i) {
+      swap(input, i, max)
+      maxHeap(input, max)
+  }
+}
+
+function swap(input, indexA, indexB) {
+  const temp = input[indexA]
+
+  input[indexA] = input[indexB]
+  input[indexB] = temp
+}
+
+function heapSort(input) {   
+  arrLength = input.length
+
+  for (let i = Math.floor(arrLength / 2); i >= 0; i -= 1)      {
+      maxHeap(input, i)
+    }
+
+  for (let i = input.length - 1; i > 0; i--) {
+      swap(input, 0, i)
+      arrLength--
+
+      maxHeap(input, 0)
+  }
+  return
+}
+
+let arrLength
 
 
   
-export {insertionSort, shuffle, quicksort}
+export default [insertionSort, browserDefaultSort, heapSort]
+export {shuffle}
