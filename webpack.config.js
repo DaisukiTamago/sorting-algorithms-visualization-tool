@@ -5,6 +5,9 @@ module.exports = {
   mode: "development",
   devtool: 'inline-source-map',
   entry: './src/js/index.ts',
+  devServer: {
+    static: './dist',
+  },
   module: {
     rules: [
       {
@@ -15,11 +18,11 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.tsx', '.ts', '.js', '.html'],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Output Management',
+      title: 'Development',
       template: 'src/index.html'
     }),
   ],
