@@ -1,5 +1,5 @@
-import { canvasElement, selectElement } from './domHandler.js'
-import {beep} from './sound.js'
+import { canvasElement, selectElement } from './domHandler'
+import {beep} from './sound'
 
 const listSize = 30
 const originalList = new Array(listSize)
@@ -40,14 +40,16 @@ async function executeChangesQueue(callback) {
             if (changeQueue[i].type === "get") {
                 callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#F00' })
                 beep(changeQueue[i].value, listSize)
-                delay(interval)
-                callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
-                resolve()
+                delay(interval).then(() => {
+                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
+                    resolve()
+                })
             } else {
                 callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#0F0' })
-                 delay(interval)
-                callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
-                resolve()
+                delay(interval).then(() => {
+                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
+                    resolve()
+                })
             }
         })
 

@@ -1,14 +1,14 @@
-import { selectElement, shuffleButton, sortButton, disableControls, enableControls } from './domHandler.js'
+import { selectElement, shuffleButton, sortButton, disableControls, enableControls } from './domHandler'
 import { 
     list,
     proxyHandler, 
     listSize, 
     addChangeToQueue,
     clearChangesQueue,
-    executeChangesQueue} from './data.js'
-import { drawBar } from './draw.js'
-import * as Algorithms from './algorithms.js'
-import {shuffle} from './algorithms.js'
+    executeChangesQueue} from './data'
+import { drawBar } from './draw'
+import * as Algorithms from './algorithms'
+import {shuffle} from './algorithms'
 
 console.log("Hello World!")
 let chosenAlgorithm

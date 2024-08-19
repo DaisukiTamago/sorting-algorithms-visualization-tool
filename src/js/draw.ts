@@ -1,4 +1,4 @@
-import {canvas, canvasElement} from './domHandler.js'
+import {canvas, canvasElement} from './domHandler'
 
 function clear(){
     canvas.clearRect(0,0,canvas.canvas.width,canvas.canvas.height)
