@@ -1,64 +1,82 @@
-import { canvasElement, selectElement } from './domHandler'
-import {beep} from './sound'
+import { canvasElement, selectElement } from "./domHandler";
+import { beep } from "./sound";
 
-const listSize = 30
-const originalList = new Array(listSize)
+const listSize = 30;
+const originalList = new Array(listSize);
 
-const listElementHeight = canvasElement.height / listSize
-const listElementWidth = canvasElement.width / listSize
+const listElementHeight = canvasElement.height / listSize;
+const listElementWidth = canvasElement.width / listSize;
 
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-const proxyHandler: ProxyHandler<object> = {}
-const list = (new Proxy(originalList, proxyHandler) as number[])
+const proxyHandler: ProxyHandler<object> = {};
+const list = new Proxy(originalList, proxyHandler) as number[];
 
-let changeQueue: Change[] = []
-console.log(selectElement.value)
+let changeQueue: Change[] = [];
+console.log(selectElement.value);
 function clearChangesQueue() {
-    changeQueue = []
+  changeQueue = [];
 }
 
 function createBarData(value: number, index: number): Bar {
-    return {
-        value,
-        x: index * listElementWidth,
-        y: canvasElement.height - listElementHeight * value,
-        width: listElementWidth,
-        height: (value * listElementHeight),
-        color: "#FFF"
-    }
+  return {
+    value,
+    x: index * listElementWidth,
+    y: canvasElement.height - listElementHeight * value,
+    width: listElementWidth,
+    height: value * listElementHeight,
+    color: "#FFF",
+  };
 }
 
 async function executeChangesQueue(callback) {
+  const interval = 0;
+  const promisesQueue = [];
+  let i = 0;
+  for (; i < changeQueue.length; i++) {
+    promisesQueue[i] = new Promise<void>((resolve) => {
+      if (changeQueue[i].type === "get") {
+        callback({
+          ...createBarData(changeQueue[i].value, changeQueue[i].index),
+          color: "#F00",
+        });
+        beep(changeQueue[i].value, listSize);
+        delay(interval).then(() => {
+          callback({
+            ...createBarData(changeQueue[i].value, changeQueue[i].index),
+            color: "#FFF",
+          });
+          resolve();
+        });
+      } else {
+        callback({
+          ...createBarData(changeQueue[i].value, changeQueue[i].index),
+          color: "#0F0",
+        });
+        delay(interval).then(() => {
+          callback({
+            ...createBarData(changeQueue[i].value, changeQueue[i].index),
+            color: "#FFF",
+          });
+          resolve();
+        });
+      }
+    });
 
-    const interval = 0
-    const promisesQueue = []
-    let i = 0
-    for (; i < changeQueue.length; i++) {
-
-        promisesQueue[i] = new Promise<void>((resolve) => {
-            if (changeQueue[i].type === "get") {
-                callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#F00' })
-                beep(changeQueue[i].value, listSize)
-                delay(interval).then(() => {
-                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
-                    resolve()
-                })
-            } else {
-                callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#0F0' })
-                delay(interval).then(() => {
-                    callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
-                    resolve()
-                })
-            }
-        })
-
-        await promisesQueue[i]
-    }
+    await promisesQueue[i];
+  }
 }
 
 function addChangeToQueue(change: Change) {
-    changeQueue.push(change)
+  changeQueue.push(change);
 }
 
-export { list, proxyHandler, listSize, changeQueue, clearChangesQueue, executeChangesQueue, addChangeToQueue }
+export {
+  list,
+  proxyHandler,
+  listSize,
+  changeQueue,
+  clearChangesQueue,
+  executeChangesQueue,
+  addChangeToQueue,
+};
