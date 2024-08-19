@@ -1,5 +1,3 @@
-import { listSize } from "./data"
-
 const context = new AudioContext()
 const oscilator = context.createOscillator()
 const volume = context.createGain()
@@ -27,8 +25,8 @@ function getFrenquency(value: number, listLength: number){
     return soundFrenquency
 }
 
-function beep(value: number, listLength: number, time){
-    let soundFrenquency = getFrenquency(value, listLength)
+function beep(value: number, listLength: number){
+    const soundFrenquency = getFrenquency(value, listLength)
 
     oscilator.frequency.value = soundFrenquency
     volume.gain.setValueAtTime(0.2, context.currentTime)
@@ -51,7 +49,7 @@ function startBeep(value: number, listLength: number) {
     //volume.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 1)
 }
 
-function endBeep(interval: number) {
+function endBeep() {
     //volume.gain.setValueAtTime(volume.gain.value, context.currentTime); 
     volume.gain.linearRampToValueAtTime(0.00001, context.currentTime)
     //volume.gain.value = 0

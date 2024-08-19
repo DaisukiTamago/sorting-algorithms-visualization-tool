@@ -1,5 +1,5 @@
-import { canvas, canvasElement, selectElement } from './domHandler.js'
-import {startBeep, endBeep, beep} from './sound.js'
+import { canvasElement, selectElement } from './domHandler.js'
+import {beep} from './sound.js'
 
 const listSize = 30
 const originalList = new Array(listSize)
@@ -10,7 +10,7 @@ const listElementWidth = canvasElement.width / listSize
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
 
 const proxyHandler: ProxyHandler<object> = {}
-let list = (new Proxy(originalList, proxyHandler) as number[])
+const list = (new Proxy(originalList, proxyHandler) as number[])
 
 let changeQueue: Change[] = []
 console.log(selectElement.value)
@@ -29,23 +29,23 @@ function createBarData(value: number, index: number): Bar {
     }
 }
 
-async function executeChangesQueue(callback: Function) {
+async function executeChangesQueue(callback) {
 
-    let interval = 0
-    let promisesQueue = []
+    const interval = 0
+    const promisesQueue = []
     let i = 0
     for (; i < changeQueue.length; i++) {
 
-        promisesQueue[i] = new Promise<void>(async (resolve) => {
+        promisesQueue[i] = new Promise<void>((resolve) => {
             if (changeQueue[i].type === "get") {
                 callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#F00' })
-                beep(changeQueue[i].value, listSize, interval)
-                await delay(interval)
+                beep(changeQueue[i].value, listSize)
+                delay(interval)
                 callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
                 resolve()
             } else {
                 callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#0F0' })
-                await delay(interval)
+                 delay(interval)
                 callback({ ...createBarData(changeQueue[i].value, changeQueue[i].index), color: '#FFF' })
                 resolve()
             }

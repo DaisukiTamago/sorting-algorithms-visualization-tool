@@ -15,7 +15,7 @@ function drawBar(bar:Bar){
     canvas.fillRect(bar.x, bar.y, bar.width, bar.height)
 }
 
-function render( list: number[]){
+function render(){
     clear()
     console.log('starting render')
     //list.forEach( (value, index) => drawBar(createBarData(value, index)) )

@@ -1,11 +1,11 @@
-function insertionSort(array: any[]) {
+function insertionSort(array: unknown[]) {
     
   const length = array.length
 
     for(let marker = 1; marker < length; marker++){
 
         let comparisonIndex = marker - 1
-        let numberToSort = array[marker]
+        const numberToSort = array[marker]
 
         while(comparisonIndex >= 0 && numberToSort < array[comparisonIndex]){
             array[comparisonIndex + 1] = array[comparisonIndex]
@@ -19,7 +19,7 @@ function insertionSort(array: any[]) {
     return array
 }
 
-function shuffle(array: any[]) {
+function shuffle(array: unknown[]) {
     let m = array.length, t, i
 
     while (m) {

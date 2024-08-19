@@ -1,21 +1,21 @@
-import { selectElement, controlsContainer, shuffleButton, sortButton, disableControls, enableControls } from './domHandler.js'
+import { selectElement, shuffleButton, sortButton, disableControls, enableControls } from './domHandler.js'
 import { 
     list,
     proxyHandler, 
     listSize, 
-    addChangeToQueue, 
-    changeQueue, 
+    addChangeToQueue,
     clearChangesQueue,
     executeChangesQueue} from './data.js'
 import { drawBar } from './draw.js'
 import * as Algorithms from './algorithms.js'
 import {shuffle} from './algorithms.js'
 
-let chosenAlgorithm: Function
+console.log("Hello World!")
+let chosenAlgorithm
 
 Algorithms.default.forEach( (sortFunction, index) => {
     if(sortFunction){
-        let optionElement = document.createElement('option')
+        const optionElement = document.createElement('option')
         optionElement.text = sortFunction.name
         optionElement.value = index.toString()
         optionElement.className = "option"
@@ -23,9 +23,9 @@ Algorithms.default.forEach( (sortFunction, index) => {
     }
 }
 )
-selectElement.onchange = async (event) => {
-    let functionIndex = selectElement.value
-    let functionElement = Algorithms.default[functionIndex] as Function
+selectElement.onchange = async () => {
+    const functionIndex = selectElement.value
+    const functionElement = Algorithms.default[functionIndex]
     sortButton.disabled = false
     sortButton.style.backgroundColor = "#000"
 
@@ -38,17 +38,17 @@ selectElement.onchange = async (event) => {
     }
 }
 
-proxyHandler.get = function (target, prop, receiver) {
+proxyHandler.get = function (target, prop) {
     if(!isNaN(parseInt(prop as string))){
-        addChangeToQueue({type: "get", index: prop as number, value: target[prop]})
+        addChangeToQueue({type: "get", index: prop as unknown as number, value: target[prop]})
     }
     
     return target[prop]
 }
 
-proxyHandler.set = function (target, prop, value, receiver) {
+proxyHandler.set = function (target, prop, value) {
     target[prop] = value
-    addChangeToQueue({type: "set", index: prop as number, value})
+    addChangeToQueue({type: "set", index: prop as unknown as number, value})
     return true
 }
 
