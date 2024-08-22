@@ -10,14 +10,6 @@ window.onclick = () => {
   oscilator.type = "triangle";
   oscilator.connect(volume);
   volume.connect(context.destination);
-
-  // TODO: for sure this is not the best way to do this, but I'm dumb as fuck and
-  // unwilling to look for the proper solution rn
-  // and yes I hate multiline comments fuck them
-  if (!isStarted) {
-    oscilator.start(0);
-    isStarted = true;
-  }
 };
 
 function getFrenquency(value: number, listLength: number) {
@@ -34,6 +26,14 @@ function getFrenquency(value: number, listLength: number) {
 }
 
 function beep(value: number, listLength: number) {
+  // TODO: for sure this is not the best way to do this, but I'm dumb as fuck and
+  // unwilling to look for the proper solution rn
+  // and yes I hate multiline comments fuck them
+  if (!isStarted) {
+    oscilator.start(0);
+    isStarted = true;
+  }
+
   const soundFrenquency = getFrenquency(value, listLength);
 
   oscilator.frequency.value = soundFrenquency;
