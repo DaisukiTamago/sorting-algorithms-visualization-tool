@@ -37,9 +37,11 @@ Algorithms.default.forEach((sortFunction, index) => {
     selectElement.appendChild(optionElement);
   }
 });
+
 selectElement.onchange = async () => {
   const functionIndex = selectElement.value;
   const functionElement = Algorithms.default[functionIndex];
+
   sortButton.disabled = false;
   sortButton.style.backgroundColor = "#000";
 
