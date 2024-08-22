@@ -39,7 +39,7 @@ class Renderer {
     y: number,
     width: number,
     height: number,
-    color: string
+    color: string,
   ) {
     this.flushRectangle(x, width);
     const rectangle = new PIXI.Graphics();

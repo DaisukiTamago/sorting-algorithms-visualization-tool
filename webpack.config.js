@@ -31,7 +31,7 @@ module.exports = {
       title: "Development",
       template: "src/index.html",
     }),
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin(),
   ],
   output: {
     filename: "bundle.js",
