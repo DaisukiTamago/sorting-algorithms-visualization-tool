@@ -1,11 +1,13 @@
-import { canvasElement, selectElement } from "./domHandler";
 import { beep } from "./sound";
 
 const listSize = 30;
 const originalList = new Array(listSize);
 
-const listElementHeight = canvasElement.height / listSize;
-const listElementWidth = canvasElement.width / listSize;
+// TODO: remove this abomination rejected by god
+const canvasElement = document.getElementById("renderer") as HTMLCanvasElement;
+
+const listElementHeight = canvasElement.clientHeight / listSize;
+const listElementWidth = canvasElement.clientWidth / listSize;
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -13,7 +15,6 @@ const proxyHandler: ProxyHandler<object> = {};
 const list = new Proxy(originalList, proxyHandler) as number[];
 
 let changeQueue: Change[] = [];
-console.log(selectElement.value);
 function clearChangesQueue() {
   changeQueue = [];
 }
@@ -22,14 +23,14 @@ function createBarData(value: number, index: number): Bar {
   return {
     value,
     x: index * listElementWidth,
-    y: canvasElement.height - listElementHeight * value,
+    y: canvasElement.clientHeight - listElementHeight * value,
     width: listElementWidth,
     height: value * listElementHeight,
     color: "#FFF",
   };
 }
 
-async function executeChangesQueue(callback) {
+async function executeChangesQueue(callback: (bar: Bar) => void) {
   const interval = 0;
   const promisesQueue = [];
   let i = 0;

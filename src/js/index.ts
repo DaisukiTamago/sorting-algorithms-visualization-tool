@@ -5,6 +5,9 @@ import {
   disableControls,
   enableControls,
 } from "./domHandler";
+
+import { Renderer } from "./renderer";
+
 import {
   list,
   proxyHandler,
@@ -13,12 +16,17 @@ import {
   clearChangesQueue,
   executeChangesQueue,
 } from "./data";
-import { drawBar } from "./draw";
+
 import * as Algorithms from "./algorithms";
+import { canvasElement } from "./domHandler";
 import { shuffle } from "./algorithms";
 
-console.log("Hello World!");
+import "../../src/index.css";
+
+const renderer = new Renderer();
 let chosenAlgorithm;
+const renderBar = (bar: Bar) =>
+  renderer.addRectangle(bar.x, bar.y, bar.width, bar.height, bar.color);
 
 Algorithms.default.forEach((sortFunction, index) => {
   if (sortFunction) {
@@ -39,7 +47,7 @@ selectElement.onchange = async () => {
     clearChangesQueue();
     functionElement(list);
     disableControls();
-    await executeChangesQueue(drawBar);
+    await executeChangesQueue(renderBar);
     enableControls();
   };
 };
@@ -64,14 +72,16 @@ proxyHandler.set = function (target, prop, value) {
 
 async function initialize() {
   //button disabled until user select the first sorting method
+  await renderer.initialize(canvasElement);
   sortButton.disabled = true;
   sortButton.style.backgroundColor = "#f6f6f6";
-  //initialize array
+  // initialize array
   clearChangesQueue();
   for (let i = 0; i < listSize; i++) {
     list[i] = i + 1;
   }
-  await executeChangesQueue(drawBar);
+
+  await executeChangesQueue(renderBar);
 }
 
 sortButton.onclick = async () => {
@@ -82,7 +92,9 @@ shuffleButton.onclick = async () => {
   clearChangesQueue();
   shuffle(list);
   disableControls();
-  await executeChangesQueue(drawBar);
+
+  await executeChangesQueue(renderBar);
+
   enableControls();
 };
 
