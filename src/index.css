@@ -18,7 +18,27 @@ canvas {
   background-color: black;
   overflow: auto;
 
-  color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: white;
+}
+
+#controls select {
+  border: none;
+  height: 30px;
+
+  margin-bottom: 20px;
+}
+
+#controls button {
+  border: none;
+  border-radius: 2px;
+}
+
+#controls button:disabled {
+  /* background-color: blue; */
 }
 
 #renderer {

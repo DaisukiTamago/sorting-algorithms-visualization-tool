@@ -25,6 +25,7 @@ import "../../src/index.css";
 
 const renderer = new Renderer();
 let chosenAlgorithm;
+
 const renderBar = (bar: Bar) =>
   renderer.addRectangle(bar.x, bar.y, bar.width, bar.height, bar.color);
 
@@ -43,7 +44,6 @@ selectElement.onchange = async () => {
   const functionElement = Algorithms.default[functionIndex];
 
   sortButton.disabled = false;
-  sortButton.style.backgroundColor = "#000";
 
   chosenAlgorithm = async () => {
     clearChangesQueue();
@@ -73,10 +73,7 @@ proxyHandler.set = function (target, prop, value) {
 };
 
 async function initialize() {
-  //button disabled until user select the first sorting method
   await renderer.initialize(canvasElement);
-  sortButton.disabled = true;
-  sortButton.style.backgroundColor = "#f6f6f6";
   // initialize array
   clearChangesQueue();
   for (let i = 0; i < listSize; i++) {
