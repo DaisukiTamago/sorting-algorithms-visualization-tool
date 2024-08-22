@@ -17,6 +17,8 @@ canvas {
   width: 25%;
   background-color: black;
   overflow: auto;
+
+  color: aliceblue;
 }
 
 #renderer {
