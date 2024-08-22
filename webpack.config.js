@@ -6,6 +6,7 @@ module.exports = {
   devtool: "inline-source-map",
   entry: "./src/js/index.ts",
   devServer: {
+    watchFiles: ["./src"],
     static: "./dist",
   },
   module: {
