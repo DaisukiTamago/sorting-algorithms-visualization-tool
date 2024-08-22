@@ -24,34 +24,27 @@ import { shuffle } from "./algorithms";
 import "../../src/index.css";
 
 const renderer = new Renderer();
-let chosenAlgorithm;
+
+const algorithms: Algorithm[] = Algorithms.default.map((sortFunction) => ({
+  name: sortFunction.name,
+  function: sortFunction,
+}));
+
+selectElement.replaceChildren(
+  ...algorithms.map(
+    (algo) => new Option(algo.name, algorithms.indexOf(algo).toString())
+  )
+);
 
 const renderBar = (bar: Bar) =>
   renderer.addRectangle(bar.x, bar.y, bar.width, bar.height, bar.color);
 
-Algorithms.default.forEach((sortFunction, index) => {
-  if (sortFunction) {
-    const optionElement = document.createElement("option");
-    optionElement.text = sortFunction.name;
-    optionElement.value = index.toString();
-    optionElement.className = "option";
-    selectElement.appendChild(optionElement);
-  }
-});
-
-selectElement.onchange = async () => {
-  const functionIndex = selectElement.value;
-  const functionElement = Algorithms.default[functionIndex];
-
-  sortButton.disabled = false;
-
-  chosenAlgorithm = async () => {
-    clearChangesQueue();
-    functionElement(list);
-    disableControls();
-    await executeChangesQueue(renderBar);
-    enableControls();
-  };
+const execute = async (fn: (list: unknown[]) => void) => {
+  clearChangesQueue();
+  disableControls();
+  fn(list);
+  await executeChangesQueue(renderBar);
+  enableControls();
 };
 
 proxyHandler.get = function (target, prop) {
@@ -72,30 +65,22 @@ proxyHandler.set = function (target, prop, value) {
   return true;
 };
 
+sortButton.onclick = () =>
+  execute(algorithms[parseInt(selectElement.value)].function);
+
+shuffleButton.onclick = async () => {
+  execute(shuffle);
+};
+
 async function initialize() {
   await renderer.initialize(canvasElement);
-  // initialize array
-  clearChangesQueue();
+
   for (let i = 0; i < listSize; i++) {
     list[i] = i + 1;
   }
 
   await executeChangesQueue(renderBar);
 }
-
-sortButton.onclick = async () => {
-  await chosenAlgorithm();
-};
-
-shuffleButton.onclick = async () => {
-  clearChangesQueue();
-  shuffle(list);
-  disableControls();
-
-  await executeChangesQueue(renderBar);
-
-  enableControls();
-};
 
 (async () => {
   await initialize();
