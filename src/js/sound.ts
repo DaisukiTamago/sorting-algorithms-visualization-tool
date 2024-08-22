@@ -4,12 +4,20 @@ const volume = context.createGain();
 
 const minFrequency = 120;
 const maxFrequency = 1212;
+let isStarted = false;
 
 window.onclick = () => {
   oscilator.type = "triangle";
   oscilator.connect(volume);
   volume.connect(context.destination);
-  oscilator.start(0);
+
+  // TODO: for sure this is not the best way to do this, but I'm dumb as fuck and
+  // unwilling to look for the proper solution rn
+  // and yes I hate multiline comments fuck them
+  if (!isStarted) {
+    oscilator.start(0);
+    isStarted = true;
+  }
 };
 
 function getFrenquency(value: number, listLength: number) {
