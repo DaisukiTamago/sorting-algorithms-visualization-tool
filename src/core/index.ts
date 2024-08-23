@@ -32,8 +32,8 @@ const algorithms: Algorithm[] = Algorithms.default.map((sortFunction) => ({
 
 selectElement.replaceChildren(
   ...algorithms.map(
-    (algo) => new Option(algo.name, algorithms.indexOf(algo).toString())
-  )
+    (algo) => new Option(algo.name, algorithms.indexOf(algo).toString()),
+  ),
 );
 
 const renderBar = (bar: Bar) =>
