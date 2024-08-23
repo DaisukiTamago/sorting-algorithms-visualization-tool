@@ -3,78 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sorting viewer</title>
-
-    <style>
-      html,
-      body {
-        z-index: 1;
-        box-sizing: border-box;
-        margin: 0;
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        background-color: #f6f6f6;
-      }
-      canvas {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background-color: black;
-      }
-
-      #controls {
-        display: flex;
-        justify-content: center;
-        padding: 20px;
-        align-items: center;
-        box-sizing: border-box;
-        background-color: black;
-        width: 100%;
-        height: 10%;
-      }
-
-      #controls * {
-        height: 100%;
-        background: none;
-        box-sizing: border-box;
-        padding-left: 5px;
-        padding-right: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        border: 1px solid white;
-        margin-right: 5px;
-        color: white;
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      #controls *:hover {
-        background-color: white;
-        color: black;
-      }
-
-      .option {
-        color: black !important;
-      }
-    </style>
+    <title>Sorting Viewer</title>
   </head>
   <body>
     <div id="controls">
-      <select id="select">
-        <option value="12345" disabled selected>
-          Select your sorting method
-        </option>
-      </select>
-      <button id="shuffle">Shuffle</button>
-      <button id="sort">Sort</button>
+      <h1>Algorithm Visualizer</h1>
+      <label>
+        choose an algorithm
+        <select id="select"></select>
+      </label>
+      <div>
+        <button id="sort">Sort</button>
+        <button id="shuffle">Shuffle</button>
+      </div>
     </div>
-    <canvas id="canvas"></canvas>
-    <script type="module" src="js/index.js"></script>
+    <div id="renderer"></div>
   </body>
 </html>

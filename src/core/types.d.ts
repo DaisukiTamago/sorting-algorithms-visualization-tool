@@ -18,3 +18,8 @@ interface Change {
   index: number;
   value: number;
 }
+
+interface Algorithm {
+  function: (list: unknown) => void;
+  name: string;
+}

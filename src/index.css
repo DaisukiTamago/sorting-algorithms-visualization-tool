@@ -1,0 +1,111 @@
+@import url("https://fonts.cdnfonts.com/css/pixelcraft-2");
+
+:root {
+  --border-radius: 5px;
+  --text-color: white;
+  --bg-color: black;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  font-family: "PixelCraft", sans-serif;
+  /* font-family: 'PixelCraft Bold', sans-serif;
+  font-family: 'PixelCraft Bold Wide', sans-serif; */
+}
+
+canvas {
+  border: none;
+  aspect-ratio: inherit !important;
+}
+
+#controls {
+  resize: horizontal;
+  width: 25%;
+  padding: 20px;
+  background-color: var(--bg-color);
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: var(--text-color);
+}
+
+#controls h1 {
+  text-align: center;
+  line-height: 40px;
+}
+
+#controls label {
+  width: 100%;
+}
+
+#controls select {
+  height: 40px;
+  width: 100%;
+
+  border-radius: var(--border-radius);
+  border-width: 1px;
+  border-color: white;
+
+  margin-top: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  background-color: transparent;
+  color: inherit;
+  font-family: inherit;
+}
+
+#controls select * {
+  background-color: var(--bg-color);
+}
+
+#controls div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 120px;
+  margin-top: 20px;
+}
+#controls button {
+  width: 100%;
+  height: 50px;
+
+  background-color: inherit;
+  color: inherit;
+
+  border-color: white;
+  border: 1px solid white;
+  border-radius: var(--border-radius);
+
+  font-family: inherit;
+}
+
+#controls button:hover {
+  cursor: pointer;
+  border-color: aqua;
+}
+
+#controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#renderer {
+  flex: 1;
+}
