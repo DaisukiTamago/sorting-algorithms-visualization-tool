@@ -8,78 +8,51 @@ import {
 
 import { Renderer } from "./renderer";
 
-import {
-  list,
-  proxyHandler,
-  listSize,
-  addChangeToQueue,
-  clearChangesQueue,
-  executeChangesQueue,
-} from "./data";
+import { listSize, executeChangesQueue, runAlgorithm } from "./data";
 
 import * as Algorithms from "./algorithms";
 import { canvasElement } from "./domHandler";
-import { shuffle } from "./algorithms";
 
 import "../../src/index.css";
 
 const renderer = new Renderer();
 
-const algorithms: Algorithm[] = Algorithms.default.map((sortFunction) => ({
-  name: sortFunction.name,
-  function: sortFunction,
-}));
+const shuffle = () => execute(Algorithms.shuffle);
+const sort = () => execute(algorithms[parseInt(selectElement.value)].function);
+const mapAlgorithm = (func: SortingFunction): Algorithm => ({
+  name: func.name,
+  function: func,
+});
 
-selectElement.replaceChildren(
-  ...algorithms.map(
-    (algo) => new Option(algo.name, algorithms.indexOf(algo).toString()),
-  ),
-);
-
+const algorithms: Algorithm[] = Algorithms.default.map(mapAlgorithm);
 const renderBar = (bar: Bar) =>
   renderer.addRectangle(bar.x, bar.y, bar.width, bar.height, bar.color);
 
-const execute = async (fn: (list: unknown[]) => void) => {
-  clearChangesQueue();
+sortButton.onclick = sort;
+shuffleButton.onclick = shuffle;
+
+selectElement.replaceChildren(
+  ...algorithms.map(
+    (algo) => new Option(algo.name, algorithms.indexOf(algo).toString())
+  )
+);
+
+const execute = async (fn: SortingFunction) => {
   disableControls();
-  fn(list);
-  await executeChangesQueue(renderBar);
+
+  const changes = runAlgorithm(
+    fn,
+    new Array(listSize).fill(0).map((_, i) => i + 1)
+  );
+
+  await executeChangesQueue(changes, renderBar);
   enableControls();
-};
-
-proxyHandler.get = function (target, prop) {
-  if (!isNaN(parseInt(prop as string))) {
-    addChangeToQueue({
-      type: "get",
-      index: prop as unknown as number,
-      value: target[prop],
-    });
-  }
-
-  return target[prop];
-};
-
-proxyHandler.set = function (target, prop, value) {
-  target[prop] = value;
-  addChangeToQueue({ type: "set", index: prop as unknown as number, value });
-  return true;
-};
-
-sortButton.onclick = () =>
-  execute(algorithms[parseInt(selectElement.value)].function);
-
-shuffleButton.onclick = async () => {
-  execute(shuffle);
 };
 
 async function initialize() {
   await renderer.initialize(canvasElement);
 
-  for (let i = 0; i < listSize; i++) {
-    list[i] = i + 1;
-  }
-
-  await executeChangesQueue(renderBar);
+  execute(Algorithms.initialize);
 }
 
 (async () => {

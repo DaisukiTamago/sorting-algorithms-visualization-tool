@@ -1,6 +1,6 @@
 import { beep } from "./sound";
 
-const listSize = 30;
+const listSize = 4;
 const originalList = new Array(listSize);
 
 // TODO: remove this abomination rejected by god
@@ -30,10 +30,14 @@ function createBarData(value: number, index: number): Bar {
   };
 }
 
-async function executeChangesQueue(callback: (bar: Bar) => void) {
+async function executeChangesQueue(
+  changeQueue: Change[],
+  callback: (bar: Bar) => void
+) {
   const interval = 0;
   const promisesQueue = [];
   let i = 0;
+
   for (; i < changeQueue.length; i++) {
     promisesQueue[i] = new Promise<void>((resolve) => {
       if (changeQueue[i].type === "get") {
@@ -72,6 +76,28 @@ function addChangeToQueue(change: Change) {
   changeQueue.push(change);
 }
 
+function runAlgorithm(fn: SortingFunction, list: number[]): Change[] {
+  const changes = [];
+
+  const proxyList = new Proxy(list, {
+    get(target, prop) {
+      if (typeof prop == "string" && isNaN(parseInt(prop))) return target[prop];
+
+      changes.push({ type: "get", index: prop, value: target[prop] });
+      return target[prop];
+    },
+    set(target, prop, value) {
+      changes.push({ type: "set", index: prop, value });
+      target[prop] = value;
+      return true;
+    },
+  });
+
+  fn(proxyList);
+
+  return changes;
+}
+
 export {
   list,
   proxyHandler,
@@ -80,4 +106,5 @@ export {
   clearChangesQueue,
   executeChangesQueue,
   addChangeToQueue,
+  runAlgorithm,
 };
