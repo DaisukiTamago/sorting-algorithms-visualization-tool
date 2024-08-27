@@ -79,9 +79,10 @@ canvas {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  height: 120px;
+  height: 220px;
   margin-top: 20px;
 }
+
 #controls button {
   width: 100%;
   height: 50px;
@@ -108,4 +109,13 @@ canvas {
 
 #renderer {
   flex: 1;
+}
+
+:modal {
+  box-shadow: 3px 3px 10px rgb(0 0 0 / 50%);
+}
+
+::backdrop {
+  background-color: var(--bg-color);
+  opacity: 0.75;
 }
