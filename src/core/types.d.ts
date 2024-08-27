@@ -20,6 +20,8 @@ interface Change {
 }
 
 interface Algorithm {
-  function: (list: unknown) => void;
+  function: SortingFunction;
   name: string;
 }
+
+type SortingFunction = (list: number[]) => void;
