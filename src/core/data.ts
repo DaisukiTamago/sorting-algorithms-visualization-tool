@@ -1,6 +1,6 @@
 import { beep } from "./sound";
 
-const listSize = 4;
+const listSize = 10;
 const originalList = new Array(listSize);
 
 // TODO: remove this abomination rejected by god
@@ -32,7 +32,7 @@ function createBarData(value: number, index: number): Bar {
 
 async function executeChangesQueue(
   changeQueue: Change[],
-  callback: (bar: Bar) => void
+  callback: (bar: Bar) => void,
 ) {
   const interval = 0;
   const promisesQueue = [];
@@ -40,27 +40,32 @@ async function executeChangesQueue(
 
   for (; i < changeQueue.length; i++) {
     promisesQueue[i] = new Promise<void>((resolve) => {
-      if (changeQueue[i].type === "get") {
+      const change = Object.freeze(changeQueue[i]);
+
+      if (change.type === "get") {
         callback({
-          ...createBarData(changeQueue[i].value, changeQueue[i].index),
+          ...createBarData(change.value, change.index),
           color: "#F00",
         });
-        beep(changeQueue[i].value, listSize);
+
+        beep(change.value, listSize);
+
         delay(interval).then(() => {
           callback({
-            ...createBarData(changeQueue[i].value, changeQueue[i].index),
+            ...createBarData(change.value, change.index),
             color: "#FFF",
           });
           resolve();
         });
       } else {
         callback({
-          ...createBarData(changeQueue[i].value, changeQueue[i].index),
+          ...createBarData(change.value, change.index),
           color: "#0F0",
         });
+
         delay(interval).then(() => {
           callback({
-            ...createBarData(changeQueue[i].value, changeQueue[i].index),
+            ...createBarData(change.value, change.index),
             color: "#FFF",
           });
           resolve();
@@ -77,17 +82,34 @@ function addChangeToQueue(change: Change) {
 }
 
 function runAlgorithm(fn: SortingFunction, list: number[]): Change[] {
-  const changes = [];
+  const changes: Change[] = [];
 
   const proxyList = new Proxy(list, {
     get(target, prop) {
       if (typeof prop == "string" && isNaN(parseInt(prop))) return target[prop];
 
-      changes.push({ type: "get", index: prop, value: target[prop] });
+      if (typeof prop == "string") {
+        changes.push({
+          type: "get",
+          index: parseInt(prop),
+          value: target[prop],
+          textRepresentation: `Read on index ${String(prop)}`,
+        });
+      }
+
       return target[prop];
     },
+
     set(target, prop, value) {
-      changes.push({ type: "set", index: prop, value });
+      if (typeof prop === "string") {
+        changes.push({
+          type: "set",
+          index: parseInt(prop),
+          value,
+          textRepresentation: `Set ${value} on index ${String(prop)}`,
+        });
+      }
+
       target[prop] = value;
       return true;
     },

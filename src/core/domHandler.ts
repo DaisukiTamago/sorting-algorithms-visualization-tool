@@ -1,5 +1,6 @@
 const canvasElement = document.getElementById("renderer");
 const settingsButton = document.getElementById("settings");
+const changesHistoryBox = document.getElementById("changes");
 const settingsModal = document.querySelector("dialog");
 const shuffleButton = document.getElementById("shuffle") as HTMLButtonElement;
 const logButton = document.getElementById("log") as HTMLButtonElement;
@@ -25,6 +26,17 @@ function disableControls() {
   shuffleButton.disabled = true;
 }
 
+function addChangeToHistory(change: Change) {
+  const changeItem = document.createElement("div");
+
+  changeItem.textContent = change.textRepresentation;
+  changesHistoryBox.appendChild(changeItem);
+}
+
+function clearChangesHistory() {
+  changesHistoryBox.childNodes.forEach((child) => child.remove());
+}
+
 export {
   shuffleButton,
   sortButton,
@@ -32,6 +44,9 @@ export {
   selectElement,
   canvasElement,
   controlsContainer,
+  changesHistoryBox,
+  clearChangesHistory,
+  addChangeToHistory,
   enableControls,
   disableControls,
 };

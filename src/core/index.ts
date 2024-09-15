@@ -11,7 +11,11 @@ import { Renderer } from "./renderer";
 import { listSize, executeChangesQueue, runAlgorithm } from "./data";
 
 import * as Algorithms from "./algorithms";
-import { canvasElement } from "./domHandler";
+import {
+  canvasElement,
+  addChangeToHistory,
+  clearChangesHistory,
+} from "./domHandler";
 
 import "../../src/index.css";
 
@@ -33,19 +37,22 @@ shuffleButton.onclick = shuffle;
 
 selectElement.replaceChildren(
   ...algorithms.map(
-    (algo) => new Option(algo.name, algorithms.indexOf(algo).toString())
-  )
+    (algo) => new Option(algo.name, algorithms.indexOf(algo).toString()),
+  ),
 );
 
 const execute = async (fn: SortingFunction) => {
   disableControls();
+  clearChangesHistory();
 
   const changes = runAlgorithm(
     fn,
-    new Array(listSize).fill(0).map((_, i) => i + 1)
+    new Array(listSize).fill(0).map((_, i) => i + 1),
   );
 
   await executeChangesQueue(changes, renderBar);
+  changes.forEach(addChangeToHistory);
+
   enableControls();
 };
 

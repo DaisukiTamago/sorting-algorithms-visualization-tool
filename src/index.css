@@ -107,6 +107,30 @@ canvas {
   opacity: 0.5;
 }
 
+#controls label[for="changes"] {
+  margin: 0;
+  margin-top: auto;
+}
+
+#controls #changes {
+  overflow-y: auto;
+  margin: 0;
+}
+
+#controls #changes div {
+  margin: 0;
+  width: 95%;
+  display: flex;
+  border: 1px solid black;
+}
+
+#controls #changes div:hover {
+  opacity: 0.5;
+  border-color: aqua;
+  cursor: pointer;
+  user-select: none;
+}
+
 #renderer {
   flex: 1;
 }

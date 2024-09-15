@@ -17,6 +17,7 @@ interface Change {
   type: "set" | "get";
   index: number;
   value: number;
+  textRepresentation: string;
 }
 
 interface Algorithm {
