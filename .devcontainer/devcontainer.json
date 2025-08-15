@@ -1,0 +1,6 @@
+{
+  "name": "Algo Visualizer",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  }
+}
