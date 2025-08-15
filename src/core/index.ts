@@ -17,8 +17,6 @@ import {
   clearChangesHistory,
 } from "./domHandler";
 
-import "../../src/index.css";
-
 const renderer = new Renderer();
 
 const shuffle = () => execute(Algorithms.shuffle);
